@@ -14,6 +14,7 @@
 /*
 * Version 0.1 22/08/2021 ~ Infopad add works. The code is here at least.
 * Version 0.2 23/08/2021 ~ Infopad set works. Groundwork on window.
+* version 1.0 23/08/2021 ~ The feature now works. Should be able to display up to 8 different type of data at once in the infopad.
 */
 
 // == Init ==
@@ -39,7 +40,7 @@ Scene_Map.prototype.update = function() {
             $gameMessage.add("You need more than one user registered in your infopad!");
         } else { 
             SceneManager.push(Scene_InfoPadMenu);   
-            SoundManager.playOk();
+            //SoundManager.playOk();
         }
     } 
 }
@@ -54,20 +55,27 @@ Scene_InfoPadMenu.prototype.initialize = function() {
 
 Scene_InfoPadMenu.prototype.create = function() {
     Scene_MenuBase.prototype.create.call(this);
-    this._infoPadWindow = new Window_InfoPad(0,0);
-    this._infoPadWindow.loadImages();
+    this._infoPadWindow = new Window_InfoPad();
+    this._infoPadWindow.setHandler("ok", this.command1.bind(this));
+    this._infoPadWindow.setHandler("cancel", this.popScene.bind(this));
     this.addWindow(this._infoPadWindow);
     var _drawnWindow = false;
 }
 
+Scene_InfoPadMenu.prototype.start = function() {
+    Scene_MenuBase.prototype.start.call(this);
+    this._infoPadWindow.refresh();
+};
+
+Scene_InfoPadMenu.prototype.command1 = function () {
+    if (this._infoPadWindow.visible) this._infoPadWindow.activate();
+    console.log("OK");
+}
+
 Scene_InfoPadMenu.prototype.update = function() {
+    Scene_MenuBase.prototype.update.call(this);
     if(Input.isTriggered("escape")) {
         SceneManager.pop();
-    }
-
-    if(!this._drawnWindow) { //Why do we need to draw it two times? It should already be drawn in Window_InfoPad.prototype.initialize but you need to open the menu two times.
-        this._infoPadWindow.drawAllItems();
-        this._drawnWindow = true;
     }
 }
 // == Window ==
@@ -79,45 +87,55 @@ Window_InfoPad.prototype = Object.create(Window_Selectable.prototype);
 Window_InfoPad.prototype.constructor = Window_InfoPad;
 
 //Most of the code starting from here was taken from the Window_MenuStatus object inside rpg_windows.js, I modified it slightly to work with the Infopad.
-Window_InfoPad.prototype.initialize = function(x, y) {
+Window_InfoPad.prototype.initialize = function() {
     var width = Graphics.boxWidth;
     var height = Graphics.boxHeight;
-    Window_Selectable.prototype.initialize.call(this, x, y, width, height);
-    this._pendingIndex = -1;
+    Window_Selectable.prototype.initialize.call(this, 0, 0, width, height);
     this.refresh();
-};
-
-Window_InfoPad.prototype.processOk = function() {
-    $gameParty.setMenuActor($gameParty.members()[this.index()]);
-    this.callOkHandler();
+    this.activate();
+    this.select(0);
 };
 
 Window_InfoPad.prototype.maxItems = function() {
     return $Infopad.actors.length;
 };
 
-// Unused.
-Window_InfoPad.prototype.loadImages = function() {
-    $Infopad.actors.forEach(elem => {
-        var actor = $gameActors.actor(findActorData(elem).id); 
-        ImageManager.reserveFace(actor.faceName());
-    });
+Window_InfoPad.prototype.drawItem = function(index) {
+    this.drawItemImage(index);
+    this.drawItemData(index);
+};
+
+Window_InfoPad.prototype.drawItemData = function(index) {
+    var rect = this.itemRect(index);
+    var infoString = "";
+
+    infoString = this.buildString(index);
+    this.changePaintOpacity(false);
+    this.drawTextEx(infoString, rect.x + Window_Base._faceWidth + this.padding, rect.y);
+    this.changePaintOpacity(true);
 }
 
-Window_InfoPad.prototype.drawItem = function(index) {
-    this.drawItemBackground(index);
-    this.drawItemImage(index);
-};
+Window_InfoPad.prototype.buildString = function(index) {
+    var value = PluginManager.parameters('Infopad')['Type of information'];
+    var parsedValue = JSON.parse(value);
+    var str = "";
 
-Window_InfoPad.prototype.drawItemBackground = function(index) {
-    if (index === this._pendingIndex) {
-        var rect = this.itemRect(index);
-        var color = this.pendingColor();
-        this.changePaintOpacity(false);
-        this.contents.fillRect(rect.x, rect.y, rect.width, rect.height, color);
-        this.changePaintOpacity(true);
+    if (parsedValue.length > 4) {
+        for (var i = 0; i < parsedValue.length; i++) {
+            if (i%2 == 0) {
+                str += parsedValue[i] + ": " + $Infopad.infoPadData[index][i] + "\t";
+            } else {
+                str += parsedValue[i] + ": " + $Infopad.infoPadData[index][i] + "\n"
+            }
+        }
+    } else {
+        for (var i = 0; i < parsedValue.length; i++) {
+            str += parsedValue[i] + ": " + $Infopad.infoPadData[index][i] + "\n";
+        }
     }
-};
+
+    return str;
+}
 
 Window_InfoPad.prototype.drawItemImage = function(index) {
     var actor = $gameActors.actor(findActorData($Infopad.actors[index]).id);
@@ -134,10 +152,6 @@ Window_InfoPad.prototype.itemHeight = function() {
 
 Window_InfoPad.prototype.numVisibleRows = function() {
     return 4;
-};
-
-Window_InfoPad.prototype.isCurrentItemEnabled = function() {
-    return true;
 };
 
 // == Functions == 
