@@ -86,11 +86,16 @@ function Window_InfoPad() {
 Window_InfoPad.prototype = Object.create(Window_Selectable.prototype);
 Window_InfoPad.prototype.constructor = Window_InfoPad;
 
+Window_InfoPad.prototype.standardBackOpacity = function() {
+    return 0;
+}
+
 //Most of the code starting from here was taken from the Window_MenuStatus object inside rpg_windows.js, I modified it slightly to work with the Infopad.
 Window_InfoPad.prototype.initialize = function() {
     var width = Graphics.boxWidth;
     var height = Graphics.boxHeight;
     Window_Selectable.prototype.initialize.call(this, 0, 0, width, height);
+    this.setBackgroundType(2)
     this.refresh();
     this.activate();
     this.select(0);
