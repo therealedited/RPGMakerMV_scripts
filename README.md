@@ -18,3 +18,7 @@ Simple character information menu. Customizable.
 
 ![](https://i.imgur.com/G2QeFON.png)
 
+# Blueprint_CustomWindow
+
+Plugin that shows a window with nothing in it. It is meant to be used as a kickstart for any plugin that needs to show custom windows.
+
