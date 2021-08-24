@@ -1,6 +1,6 @@
 /*:
 * @author browearekissing
-* @plugindesc Jukebox plugin for Rakuten
+* @plugindesc Jukebox plugin for Rakuen
 * @help -Plugin Commands-
 
  Jukebox add <song name> ~ Adds a song to the jukebox. The song name should be the name of the song in your project.
