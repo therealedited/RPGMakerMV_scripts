@@ -8,7 +8,7 @@
 *
 * @param Type of information
 * @type text[]
-* 
+*
 */
 
 /*
@@ -20,7 +20,7 @@
 // == Init ==
 var $Infopad = null;
 
-Input.keyMapper["79"] = "InfopadMenu";
+//Input.keyMapper["79"] = "InfopadMenu";
 
 function Infopad() {
     this.actors = [];
@@ -32,7 +32,7 @@ function Scene_InfoPadMenu() {
 }
 // == Scene ==
 
-var aliasSceneMapUpdate = Scene_Map.prototype.update;
+/*var aliasSceneMapUpdate = Scene_Map.prototype.update;
 Scene_Map.prototype.update = function() {
     aliasSceneMapUpdate.call(this);
     if(Input.isTriggered("InfopadMenu")) {
@@ -43,7 +43,7 @@ Scene_Map.prototype.update = function() {
             //SoundManager.playOk();
         }
     } 
-}
+}*/
 
 
 Scene_InfoPadMenu.prototype = Object.create(Scene_MenuBase.prototype);
@@ -201,7 +201,13 @@ function setNewDataInfoPad(args) {
 }
 
 function showInfopad() {
-    console.log("Does nothing :o(");
+    if ($Infopad.actors.length <= 0) {
+        $gameMessage.add("You need more than one user registered in your infopad!");
+    } else { 
+        SceneManager.push(Scene_InfoPadMenu);
+        SoundManager.playOk();
+    }
+
 }
 
 // == Plugin Commands ==
