@@ -16,3 +16,5 @@ Simple character information menu. Customizable.
 
 `Infopad show` shows the Infopad.
 
+![](https://i.imgur.com/G2QeFON.png)
+
