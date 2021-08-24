@@ -77,5 +77,3 @@ function displayJukeboxMenu() {
         }
     }
 })();
-
-//Yo, aren't fox ladies kinda hot?
