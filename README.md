@@ -22,3 +22,11 @@ Simple character information menu. Customizable.
 
 Plugin that shows a window with nothing in it. It is meant to be used as a kickstart for any plugin that needs to show custom windows.
 
+# Polyglot
+
+Easy multilingual support for dubs. Please read the plugin help section if you use it in RPG Maker MV. 
+
+`Polyglot play <voiceline name>` plays the voiceline.
+
+`Polyglot init` Opens a choice window with every language that was set in the plugin parameters.
+
