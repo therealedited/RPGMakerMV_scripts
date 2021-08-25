@@ -19,7 +19,7 @@ function displayJukeboxMenu() {
     $gameMessage.setChoices($Jukebox.songArray,0, 0);
     $gameMessage.setChoiceCallback(
         function(choice) {
-            AudioManager.playBgm({name: $Jukebox.songArray[choice], volume: 80, pitch:100, pan:100})
+            AudioManager.playBgm({name: $Jukebox.songArray[choice], volume: 100, pitch:100, pan:0})
         }
     )
 }
