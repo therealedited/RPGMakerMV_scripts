@@ -16,6 +16,7 @@
 
         -Plugin Commands-
     Polyglot play <voiceline name> ~ plays the voiceline.
+    Polyglot init ~ Opens a choice window with every language that was set in the plugin parameters.
 
         -Important notes-
     If you want to play the soundfile "char01_hello_EN", you should use "Polyglot play char01_hello" and NOT "Polyglot play char01_hello_"
